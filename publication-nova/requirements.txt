@@ -1,0 +1,2 @@
+# Versions used for the delivered V1.
+cryptography==50.0.0

@@ -1,0 +1,10 @@
+# Nœuds de départ (seeds) du réseau nova-testnet-3.
+#
+# Une adresse par ligne :   https://hôte:port#identifiant-du-noeud-de-64-caracteres
+# Les lignes vides et ce qui suit un # sont ignorés.
+#
+# CE FICHIER EST VOLONTAIREMENT VIDE : aucun nœud public n'existe encore. L'organisateur y inscrit
+# les nœuds qu'il exploite lui-même, après avoir vérifié leur identifiant par un canal sûr
+# (voir TESTNET.md). Utilisation :
+#
+#   python -m novacoin node --data .local/noeud --peers-file seeds.txt

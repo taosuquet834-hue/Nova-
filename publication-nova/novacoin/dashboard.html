@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Nova — Notre monnaie, notre réseau</title>
+  <style>
+    :root{color-scheme:dark;--bg:#101413;--panel:#1a211e;--line:#303a32;--text:#edf2e9;--muted:#a7b3a8;--lime:#cef59b;--gold:#e5bc78}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.45;cursor:wait}
+    .shell{max-width:1240px;margin:auto;padding:30px 36px 60px}
+    header{display:flex;justify-content:space-between;align-items:center;padding-bottom:28px;border-bottom:1px solid var(--line)}
+    .brand{font-size:26px;font-weight:750;letter-spacing:-1px;display:flex;align-items:center;gap:12px}
+    .symbol{display:grid;place-items:center;background:var(--lime);color:#23311b;width:40px;height:40px;border-radius:50%;font-size:25px}
+    .top-right{display:flex;align-items:center;gap:20px;font-size:12px;color:var(--muted)}
+    .tag{border:1px solid #587142;background:#253020;color:var(--lime);padding:5px 10px;border-radius:30px;font-size:11px;letter-spacing:1px;text-transform:uppercase}
+    .dot{display:inline-block;background:var(--lime);width:7px;height:7px;border-radius:50%;margin-right:7px}.dot.off{background:var(--gold)}
+    .hero{display:flex;justify-content:space-between;gap:20px;align-items:center;margin:42px 0 32px}
+    .eyebrow{font-size:11px;font-weight:650;letter-spacing:2px;text-transform:uppercase;color:var(--lime);margin-bottom:12px}
+    h1{font-size:clamp(30px,4vw,49px);letter-spacing:-2px;line-height:1.13;font-weight:600;margin:0 0 14px}
+    p{margin:0;color:var(--muted)}.hero p{max-width:620px}.orbit{width:118px;height:118px;border:1px solid #4c5c41;border-radius:50%;display:grid;place-items:center;flex-shrink:0;position:relative;background:radial-gradient(circle,#32452b,transparent 70%)}
+    .orbit:before{content:"";position:absolute;inset:13px;border:1px solid #566f43;border-radius:50%;transform:rotate(-30deg) scaleX(.6)}
+    .orbit span{font-size:46px;font-weight:200;color:var(--lime)}.stats{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+    .stat{padding:22px 24px;background:var(--panel);border-right:1px solid var(--line)}.stat:last-child{border:0}
+    .stat label{display:block;color:var(--muted);font-size:12px;margin-bottom:9px}.stat strong{font-size:30px;letter-spacing:-1px;font-weight:550}.stat small{font-size:12px;color:var(--muted);margin-left:6px}
+    .grid{display:grid;grid-template-columns:1.15fr 1fr;gap:20px;margin-top:24px}
+    .panel{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:24px;min-width:0}
+    .panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:12px}h2{font-size:17px;font-weight:550;margin:0;letter-spacing:-.2px}.minor{font-size:11px;color:var(--muted)}
+    .wallet{padding:18px;border:1px solid var(--line);border-radius:10px;display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center;margin-top:12px}
+    .avatar{height:36px;width:36px;display:grid;place-items:center;border-radius:50%;background:#34422e;color:var(--lime);font-weight:600}
+    .wallet:nth-child(2) .avatar{background:#443d2c;color:var(--gold)}
+    .wallet-name{font-size:14px;font-weight:550}.address{font-family:ui-monospace,monospace;color:var(--muted);font-size:10px;cursor:pointer;border:0;background:transparent;padding:3px 0}
+    .balance{text-align:right}.balance strong{font-size:22px;font-weight:550;letter-spacing:-.7px}.balance small{display:block;font-size:10px;color:var(--muted)}
+    .hint{font-size:11px;line-height:1.6;margin-top:16px;color:var(--muted)}
+    label.field{font-size:11px;color:var(--muted);display:block;margin-bottom:6px}
+    input,select{width:100%;padding:11px 12px;background:#121814;color:var(--text);border:1px solid #3a473c;border-radius:7px;outline:none}
+    input:focus,select:focus{border-color:var(--lime)}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+    .btn{border:none;border-radius:7px;background:var(--lime);color:#1c2b14;font-weight:650;padding:12px 17px}.btn.secondary{background:#2d3829;color:var(--lime);border:1px solid #526345}
+    .wide{width:100%}.form-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:16px}.form-foot span{font-size:11px;color:var(--muted)}
+    .mining{margin-top:20px;display:flex;align-items:center;justify-content:space-between;gap:24px}.mining p{font-size:12px;margin-top:6px}
+    .mining-controls{display:flex;align-items:center;gap:10px;flex-shrink:0}.mining-controls select{width:100px}.mining-controls .btn{white-space:nowrap}
+    .lower{display:grid;grid-template-columns:1.6fr 1fr;gap:20px;margin-top:20px}
+    table{border-collapse:collapse;width:100%;font-size:12px}th{text-align:left;color:var(--muted);font-size:10px;font-weight:450;padding:0 10px 12px}
+    td{padding:12px 10px;border-top:1px solid var(--line)}td:first-child{color:var(--lime)}code{font:11px ui-monospace,monospace;color:var(--muted)}
+    .peer{border-top:1px solid var(--line);padding:16px 0}.peer strong{font-size:12px;font-weight:500}.peer p{font-size:11px;margin-top:4px}
+    .notice{padding:12px 16px;margin-bottom:20px;border:1px solid #596b43;border-radius:8px;background:#253020;font-size:12px;overflow-wrap:anywhere}
+    .notice.error{border-color:#87584b;background:#3c2924;color:#ffd2bf}
+    .empty{font-size:12px;color:var(--muted);padding:12px 0}
+    footer{display:flex;justify-content:space-between;gap:20px;color:var(--muted);font-size:10px;margin-top:28px}
+    #lock{max-width:520px;margin:40px auto}.hidden{display:none!important}.tx{padding:12px 0;border-top:1px solid var(--line);font-size:11px;overflow-wrap:anywhere}
+    @media(max-width:850px){.shell{padding:20px}.grid,.lower{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.stat:nth-child(2){border-right:0}.stat:nth-child(-n+2){border-bottom:1px solid var(--line)}.orbit{display:none}.mining{align-items:flex-start;flex-direction:column}.top-right>span:first-child{display:none}}
+    @media(max-width:480px){.shell{padding:16px}.panel{padding:18px}.wallet{padding:12px;gap:8px;grid-template-columns:30px 1fr auto}.balance strong{font-size:18px}.avatar{width:28px;height:28px}.form-row{grid-template-columns:1fr}.stat{padding:16px}.stat strong{font-size:25px}.hero{margin:28px 0}.mining-controls{width:100%;flex-wrap:wrap}footer{flex-direction:column}}
+    .lab-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}.node-card{border:1px solid var(--line);border-radius:10px;padding:18px;background:#141b16}.node-card h3{margin:0 0 10px;font-size:15px}.node-card p{font-size:12px;margin:6px 0;overflow-wrap:anywhere}.node-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.node-actions button{font-size:12px;padding:9px 12px}.event{border-top:1px solid var(--line);padding:11px 0;font-size:12px}.event small{display:block;color:var(--muted);margin-top:3px}.lab-result{color:var(--lime);font-size:13px;margin-top:16px}.scenario{font-size:12px;line-height:1.7;margin-top:16px;color:var(--muted)}@media(max-width:700px){.lab-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<div class="shell">
+  <header><div class="brand"><span class="symbol">✳</span> nova<span class="minor">V4</span></div>
+    <div class="top-right"><span id="connection"><i class="dot off"></i>Connexion…</span><span class="tag">Réseau d’essai</span></div></header>
+  <div class="hero"><div><div class="eyebrow">Notre monnaie · Notre réseau</div><h1>Une idée devient<br>une blockchain.</h1><p>Mine les premières pièces, envoie un paiement et observe les nœuds se mettre d’accord.</p></div><div class="orbit" aria-hidden="true"><span>✳</span></div></div>
+  <div id="notice" role="status" aria-live="polite" class="notice hidden"></div>
+  <section id="lock" class="panel hidden"><h2>Ouvrir les commandes locales</h2><p class="hint">Le lanceur ouvre normalement cette page avec son accès. Sinon, colle le contenu du fichier <code>admin.token</code> du nœud.</p><form id="unlock"><label for="token" class="field">Jeton administrateur</label><input id="token" type="password" autocomplete="off" required><button class="btn wide" style="margin-top:14px">Ouvrir le laboratoire</button></form></section>
+  <main id="app" class="hidden">
+    <section class="stats" aria-label="État du réseau">
+      <div class="stat"><label>Blocs minés</label><strong id="height">0</strong><small>blocs</small></div>
+      <div class="stat"><label>Pièces créées</label><strong id="issued">0</strong><small>NOVA</small></div>
+      <div class="stat"><label>Transactions en attente</label><strong id="pending">0</strong><small>paiements</small></div>
+      <div class="stat"><label>Nœuds connectés</label><strong id="nodes">1</strong><small>sur le réseau local</small></div>
+    </section>
+    <section id="laboratory" class="panel" style="margin-top:24px">
+      <div class="panel-head"><h2>Laboratoire de résilience</h2><span class="tag">V4 · Trois nœuds sur ton Mac</span></div>
+      <p>Coupe les échanges, fais évoluer les chaînes et observe leur réunion. Les portefeuilles restent accessibles pendant l’isolement.</p>
+      <div id="lab-nodes" class="lab-grid"></div><div id="lab-result" class="lab-result" aria-live="polite"></div>
+      <div class="scenario"><strong>Tester une coupure :</strong> isole B → mine sur A → reconnecte B.<br><strong>Tester deux historiques :</strong> isole B → mine 1 bloc sur A et 2 sur B → reconnecte B. La chaîne au travail cumulé supérieur sera retenue. À travail égal, mine un bloc supplémentaire sur une branche.</div>
+    </section>
+    <div class="grid">
+      <section class="panel"><div class="panel-head"><h2>Nos portefeuilles</h2><span class="minor">PIÈCES DE TEST</span></div><div id="wallets"></div><p class="hint">Le solde disponible exclut les récompenses encore immatures et les pièces réservées par un paiement. Clique sur une adresse pour la copier.</p></section>
+      <section class="panel"><div class="panel-head"><h2>Envoyer des pièces</h2><span class="minor">PAIEMENT SIGNÉ</span></div>
+        <form id="send-form"><div class="form-row"><div><label class="field" for="sender">Depuis</label><select id="sender"><option>Alice</option><option>Bob</option></select></div><div><label class="field" for="recipient">Vers</label><select id="recipient"><option>Bob</option><option>Alice</option></select></div></div>
+          <label class="field" for="amount">Montant en NOVA</label><input id="amount" type="text" inputmode="decimal" value="10" placeholder="10" required>
+          <div class="form-foot"><span>Frais fixes : 0,001 NOVA</span><button id="send-button" class="btn" type="submit">Envoyer ↗</button></div>
+        </form><p class="hint" id="send-hint">Mine 3 blocs pour obtenir des pièces disponibles, puis effectue ton premier envoi.</p>
+      </section>
+    </div>
+    <section class="panel mining"><div><div class="eyebrow" style="margin-bottom:6px">Faire avancer la chaîne</div><h2>Un nouveau bloc, une nouvelle preuve.</h2><p id="mining-help">Récompense initiale : 50 NOVA par bloc. Le minage confirme les paiements en attente.</p></div><div class="mining-controls"><label for="miner" class="minor">Pour</label><select id="miner"><option>Alice</option><option>Bob</option></select><button id="mine-one" class="btn secondary">Miner 1 bloc</button><button id="mine-three" class="btn">Miner 3 blocs</button><button id="mine-auto" class="btn secondary" aria-pressed="false">Minage automatique : arrêté</button></div></section>
+    <div class="lower">
+      <section class="panel"><div class="panel-head"><h2>Derniers blocs</h2><span class="minor" id="difficulty">PREUVE DE TRAVAIL</span></div><table><thead><tr><th>Bloc</th><th>Empreinte</th><th>Transactions*</th><th>Heure</th></tr></thead><tbody id="blocks"></tbody></table><p class="hint">* Inclut la transaction de récompense du mineur. Le bloc 0 est le point de départ.</p></section>
+      <section class="panel"><div class="panel-head"><h2>Vie du réseau</h2><span class="minor">EN DIRECT</span></div><div id="peers"></div><div id="security" class="hint" style="margin-top:14px"></div><div id="alerts" style="margin-top:10px"></div><div style="margin-top:16px"><h2 style="font-size:14px;margin-bottom:12px">Paiements à confirmer</h2><div id="transactions"></div></div></section>
+    </div>
+    <section class="panel" style="margin-top:20px"><div class="panel-head"><h2>Journal des nœuds</h2><span class="minor">ÉVÉNEMENTS CONSERVÉS</span></div><div id="events"></div></section>
+  </main>
+  <footer><span>Nova V13 · Blockchain expérimentale indépendante · Aucune valeur monétaire garantie</span><span>Portefeuilles de démo gérés sur cet ordinateur · Données conservées localement</span></footer>
+</div>
+<script>
+  const $ = id => document.getElementById(id);
+  const fragment = new URLSearchParams(location.hash.slice(1));
+  let token = fragment.get('token') || sessionStorage.getItem('nova-admin') || '';
+  if (fragment.has('token')) { sessionStorage.setItem('nova-admin', token); history.replaceState(null, '', location.pathname); }
+  let state = null, busy = false, refreshing = false, online = false, notificationTimer;
+  const stateLabels={connected:'Connecté',isolated:'Isolé',syncing:'Synchronisation',connecting:'Connexion en cours',alone:'Sans pair',diverged:'Historiques différents',error:'Pair indisponible'};
+  const nf = new Intl.NumberFormat('fr-FR', {maximumFractionDigits:8});
+  const short = text => text.slice(0,9) + '…' + text.slice(-6);
+  function el(tag, text, className) { const e=document.createElement(tag); if(text!==undefined)e.textContent=text; if(className)e.className=className; return e; }
+  function notify(message, error=false) { clearTimeout(notificationTimer); $('notice').textContent=message; $('notice').className='notice'+(error?' error':''); notificationTimer=setTimeout(()=>$('notice').classList.add('hidden'),12000); }
+  async function api(path, body) {
+    const response = await fetch(path, {method:body===undefined?'GET':'POST',headers:{'X-Nova-Token':token,...(body===undefined?{}:{'Content-Type':'application/json'})},body:body===undefined?undefined:JSON.stringify(body)});
+    const data=await response.json(); if(!response.ok)throw new Error(data.error||'Requête refusée'); return data;
+  }
+  function updateButtons(){const disabled=busy||!online||!state||!state.demo; $('send-button').disabled=disabled; $('mine-one').disabled=disabled||state?.mining.running; $('mine-three').disabled=disabled||state?.mining.running; $('mine-auto').disabled=disabled;}
+  function render(data) {
+    state=data; online=true; $('app').classList.remove('hidden'); $('lock').classList.add('hidden');
+    $('connection').replaceChildren(el('i',undefined,'dot'),document.createTextNode((stateLabels[data.network_state]||'Nœud actif')+(data.network.endsWith('-easy')?' · laboratoire':'')));
+    $('height').textContent=nf.format(data.height); $('issued').textContent=nf.format(Number(data.issued_nova));
+    $('pending').textContent=data.pending; $('nodes').textContent=1+(data.isolated?0:data.peers.filter(p=>p.ok).length);
+    $('difficulty').textContent='DIFFICULTÉ : '+nf.format(data.difficulty_bits)+' BITS';
+    const auto=data.automine&&data.automine.enabled; $('mine-auto').textContent='Minage automatique : '+(auto?'actif ('+data.automine.blocks+' blocs)':'arrêté'); $('mine-auto').setAttribute('aria-pressed',auto?'true':'false'); $('mine-auto').className='btn '+(auto?'':'secondary');
+    $('wallets').replaceChildren();
+    for(const wallet of data.wallets){
+      const card=el('div',undefined,'wallet'), identity=el('div'), balance=el('div',undefined,'balance');
+      identity.append(el('div',wallet.name,'wallet-name'));
+      const addressButton=el('button',short(wallet.address),'address'); addressButton.title=wallet.address;
+      addressButton.onclick=async()=>{try{await navigator.clipboard.writeText(wallet.address);notify('Adresse de '+wallet.name+' copiée.');}catch{notify(wallet.address);}};
+      identity.append(addressButton); balance.append(el('strong',nf.format(Number(wallet.confirmed_nova))),el('small',nf.format(Number(wallet.available_nova))+' disponibles'));
+      card.append(el('div',wallet.name[0],'avatar'),identity,balance); $('wallets').append(card);
+    }
+    if(!data.demo){$('wallets').append(el('p','Ce nœud utilise les portefeuilles indépendants en ligne de commande.','empty'));$('send-hint').textContent='Les commandes de démonstration sont disponibles sur le premier nœud du lanceur.';}
+    $('blocks').replaceChildren();
+    for(const b of data.blocks){const row=el('tr');row.append(el('td','#'+b.height));const hash=el('td');hash.append(el('code',short(b.hash)));hash.title=b.hash;row.append(hash,el('td',b.transactions),el('td',new Date(b.timestamp*1000).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'})));$('blocks').append(row);}
+    $('peers').replaceChildren();
+    for(const peer of data.peers){const card=el('div',undefined,'peer'), label=el('strong',peer.url);label.prepend(el('i',undefined,'dot'+(peer.ok?'':' off')));card.append(label,el('p',(peer.ok?'Connecté · bloc #'+peer.height:peer.error||'Connexion en cours…')+(peer.id?' · 🔒 identité '+peer.id.slice(0,8)+'…':' · identité inconnue')));$('peers').append(card);}
+    if(data.reorg_blocked){$('notice').textContent='⚠ Une chaîne plus lourde est refusée : elle remplacerait '+data.reorg_blocked.removed_blocks+' blocs (limite '+data.reorg_blocked.limit+'). Si vous êtes isolé depuis longtemps, vérifiez avec les autres participants avant de lever la limite (commande reorg-limit).';$('notice').className='notice error';}
+    $('alerts').replaceChildren(...(data.alerts||[]).map(a=>el('p',({critical:'⛔ ',warning:'⚠ ',info:'ℹ '}[a.level]||'')+a.message,'hint')));
+    if(data.security){const bans=data.security.bans||[];$('security').textContent='🔒 Échanges entre nœuds : '+data.security.transport+'. Identité de ce nœud : '+data.node_id.slice(0,8)+'…'+data.node_id.slice(-6)+(data.security.closed?' · mode fermé.':'.')+(bans.length?' Bannis temporairement : '+bans.map(b=>b.key.slice(0,8)+'… ('+b.seconds_left+' s)').join(', ')+'.':' Aucun pair banni.');}
+    if(!data.peers.length)$('peers').append(el('p','Aucun autre nœud configuré.','empty'));
+    $('transactions').replaceChildren();
+    for(const tx of data.pending_transactions){const item=el('div',undefined,'tx');item.append(el('code',short(tx.txid)),el('p',tx.outputs.length+' sortie(s) · en attente d’un bloc'));$('transactions').append(item);}
+    if(!data.pending_transactions.length)$('transactions').append(el('p','Aucun paiement en attente.','empty'));
+    $('mining-help').textContent=data.mining.running?'Minage en cours : '+data.mining.completed+' / '+data.mining.requested+' blocs…':data.mining.error?'Minage arrêté : '+data.mining.error:'Récompense initiale : 50 NOVA par bloc. Le minage confirme les paiements en attente.';
+    renderLab(data); updateButtons();
+  }
+  async function labAction(target,action,count=1){busy=true;updateButtons();document.querySelectorAll('[data-lab-action]').forEach(b=>b.disabled=true);try{await api('/api/lab/control',{target,action,count,miner:target==='primary'?'Alice':'Bob'});notify(action==='mine'?'Minage lancé sur le nœud choisi.':action==='isolate'?'Nœud isolé. Ses échanges avec les autres nœuds sont suspendus.':'Nœud reconnecté. Le rattrapage va commencer.');}catch(error){notify(error.message,true);}finally{busy=false;await refresh();updateButtons();}}
+  function renderLab(data){
+    const remote=data.lab?.secondary; $('laboratory').classList.toggle('hidden',!data.lab?.enabled); $('lab-nodes').replaceChildren();
+    for(const [target,label,node] of [['primary','Nœud A · Alice',data],['secondary','Nœud B · Bob',remote]]){
+      const card=el('div',undefined,'node-card');card.append(el('h3',label));
+      if(!node){card.append(el('p',data.lab?.error||'Nœud injoignable'));$('lab-nodes').append(card);continue;}
+      card.append(el('p',stateLabels[node.network_state]||'Connexion en cours'),el('p','Bloc #'+node.height+' · Travail cumulé : '+node.chainwork),el('code',short(node.tip)));
+      const buttons=el('div',undefined,'node-actions');
+      for(const [action,text,count] of [[node.isolated?'connect':'isolate',node.isolated?'Reconnecter '+(target==='primary'?'A':'B'):'Isoler '+(target==='primary'?'A':'B'),1],['mine','Miner 1 bloc sur '+(target==='primary'?'A':'B'),1],['mine','Miner 2 blocs sur '+(target==='primary'?'A':'B'),2]]){
+        const button=el('button',text,'btn secondary');button.dataset.labAction=action;button.disabled=busy||(!online)||(action==='mine'&&node.mining.running);button.onclick=()=>labAction(target,action,count);buttons.append(button);
+      }
+      card.append(buttons);$('lab-nodes').append(card);
+    }
+    $('lab-result').textContent=!remote?'Second nœud indisponible.':data.tip===remote.tip?(data.isolated||remote.isolated?'Même historique pour le moment · échanges suspendus.':'Les deux nœuds possèdent le même historique.'):(data.isolated||remote.isolated?'Historiques différents pendant l’isolement.':data.chainwork===remote.chainwork?'Deux branches de même travail : mine un bloc supplémentaire pour les départager.':'Historiques différents : convergence en cours.');
+    const events=[...(data.events||[]).map(e=>({...e,node:'A'})),...(remote?.events||[]).map(e=>({...e,node:'B'}))].sort((a,b)=>b.timestamp-a.timestamp||b.id-a.id).slice(0,16);
+    $('events').replaceChildren();for(const event of events){const row=el('div',undefined,'event');row.append(el('span',event.message),el('small',new Date(event.timestamp*1000).toLocaleTimeString('fr-FR')+' · Nœud '+event.node+(event.details.removed_blocks!==undefined?' · '+event.details.removed_blocks+' bloc(s) remplacé(s), '+event.details.added_blocks+' ajouté(s)':'')));$('events').append(row);}
+  }
+  async function refresh(){if(refreshing)return;refreshing=true;try{render(await api('/api/dashboard'));}catch(error){online=false;updateButtons();document.querySelectorAll('[data-lab-action]').forEach(b=>b.disabled=true);$('connection').replaceChildren(el('i',undefined,'dot off'),document.createTextNode('Accès indisponible'));if(!state){$('lock').classList.remove('hidden');$('app').classList.add('hidden');}}finally{refreshing=false;}}
+  $('unlock').onsubmit=async event=>{event.preventDefault();token=$('token').value.trim();try{const data=await api('/api/dashboard');sessionStorage.setItem('nova-admin',token);$('token').value='';render(data);}catch(error){notify(error.message,true);}};
+  $('send-form').onsubmit=async event=>{event.preventDefault();busy=true;updateButtons();try{const recipient=state.wallets.find(w=>w.name===$('recipient').value);const result=await api('/api/demo/send',{sender:$('sender').value,recipient:recipient.address,amount:$('amount').value.replace(',','.')});notify('Paiement signé et transmis : '+short(result.txid)+'. Mine un bloc pour le confirmer.');await refresh();}catch(error){notify(error.message,true);}finally{busy=false;updateButtons();}};
+  async function mine(count){busy=true;updateButtons();try{const wallet=state.wallets.find(w=>w.name===$('miner').value);await api('/api/mine',{address:wallet.address,count});notify('Minage lancé : '+count+' bloc(s) pour '+wallet.name+'.');await refresh();}catch(error){notify(error.message,true);}finally{busy=false;updateButtons();}}
+  async function toggleAuto(){busy=true;updateButtons();try{const on=!(state.automine&&state.automine.enabled);const wallet=state.wallets.find(w=>w.name===$('miner').value);await api('/api/automine',{enabled:on,address:on?wallet.address:undefined});notify(on?'Minage automatique activé pour '+wallet.name+'.':'Minage automatique arrêté.');await refresh();}catch(error){notify(error.message,true);}finally{busy=false;updateButtons();}}
+  $('mine-auto').onclick=toggleAuto;
+  $('mine-one').onclick=()=>mine(1);$('mine-three').onclick=()=>mine(3);
+  refresh();setInterval(refresh,1500);
+</script>
+</body>
+</html>
